@@ -11,6 +11,8 @@ public enum DataEnum {
 	TEACHER_BOY("男","老师性别"),
 	TEACHER_GIRL("女","老师性别"),
 	
+	SUCCESS_STATUS("1","成功"),
+	ERROR_STATUS("0","失败"),
 	;
 	
 	private String code;
