@@ -22,4 +22,37 @@ public class InitDateTime {
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return sdf.format(date);
 	}
+	/**
+	 * 获取当前年
+	 * @return
+	 */
+	public static String getYear() {
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy");
+		return sdf.format(new Date());
+	}
+	/**
+	 * 获取当前月
+	 * @return
+	 */
+	public static String getMounth() {
+		SimpleDateFormat sdf=new SimpleDateFormat("MM");
+		return sdf.format(new Date());
+	}
+	/**
+	 * 获取当前日
+	 * @return
+	 */
+	public static String getDay() {
+		SimpleDateFormat sdf=new SimpleDateFormat("dd");
+		return sdf.format(new Date());
+	}
+	
+	/**
+	 * 获取昨天的天
+	 * @return
+	 */
+	public static String getZuoTianDay() {
+		SimpleDateFormat sdf=new SimpleDateFormat("dd");
+		return sdf.format(new Date(new Date().getTime() - 24*3600*1000));
+	}
 }

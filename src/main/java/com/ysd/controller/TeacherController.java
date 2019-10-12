@@ -27,6 +27,7 @@ import com.ysd.entity.Teachers;
 import com.ysd.enums.DataEnum;
 import com.ysd.form.TeacherForm;
 import com.ysd.repository.SectionsRepository;
+import com.ysd.service.EchartsService;
 import com.ysd.service.TeacherService;
 import com.ysd.util.ExportExcel;
 import com.ysd.util.ImportExcel;
@@ -42,6 +43,9 @@ public class TeacherController {
 	
 	@Autowired
 	private SectionsRepository sectionsRepository;
+	
+	@Autowired
+	private EchartsService echartsService;
 	
 	final String TEACHER_FILENAME = "teacher.xlsx";// 设置文件名，根据业务需要替换成要下载的文件名
 	final String[] TEACHER_TITLE= {"姓名","性别","备注","科室"};
@@ -130,5 +134,10 @@ public class TeacherController {
 			list.add(teachers);
 		}
 		ExportExcel.exportTeacherExcel(TEACHER_FILENAME, TEACHER_TITLE, list, response);
+	}
+	
+	@GetMapping("/selectSnameTeacherEcharts")
+	public List<Map<String, Object>> selectSnameTeacherEcharts(String beginTime, String endTime, String rname) {
+		return echartsService.selectSnameTeacherEcharts(beginTime, endTime, rname);
 	}
 }
