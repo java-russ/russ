@@ -1,27 +1,13 @@
 package com.ysd.controller;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +23,7 @@ import com.ysd.entity.Sections;
 import com.ysd.entity.Students;
 import com.ysd.form.StudentForm;
 import com.ysd.repository.MembershipsRepository;
+import com.ysd.service.EchartsService;
 import com.ysd.service.StudentService;
 import com.ysd.util.ExportExcel;
 import com.ysd.util.PageUtil;
@@ -51,6 +38,9 @@ public class StudentController {
 	
 	@Autowired
 	private MembershipsRepository membershipsRepository;
+	
+	@Autowired
+	private EchartsService echartsService;
 	
 	final String[]  STUDENT_TITLE= {"姓名","性别","学号","备注","专业"};
 	final String STUDENT_FILENAME = "student.xlsx";
@@ -170,4 +160,14 @@ public class StudentController {
 		ExportExcel.exportStudentExcel(STUDENT_FILENAME,STUDENT_TITLE, list, response);
 	}
 	
+	@GetMapping("/selectSpecialtyStudentEcharts")
+	public List<Map<String, Object>> selectSpecialtyStudentEcharts(String beginTime, String endTime, String rname) {
+		return echartsService.selectSpecialtyStudentEcharts(beginTime, endTime, rname);
+	}
+	@GetMapping("/selectStudentReadromsEcharts")
+	public List<String[]> selectStudentReadromsEcharts(String years, String months, String days) {
+		return echartsService.selectStudentReadromsEcharts(years, months, days);
+	}
+		
+		
 }

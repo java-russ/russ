@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.ysd.entity.Consumelogs;
 import com.ysd.entity.Readrooms;
+import com.ysd.entity.Statistics;
 import com.ysd.entity.Students;
 import com.ysd.entity.Teachers;
 import com.ysd.enums.CardNoEnum;
@@ -20,6 +21,7 @@ import com.ysd.enums.TeachersEnum;
 import com.ysd.exception.SellException;
 import com.ysd.repository.ConsumelogsRepoditory;
 import com.ysd.repository.ReadroomsRepository;
+import com.ysd.repository.StatisticsRepoditory;
 import com.ysd.repository.StudentsRepository;
 import com.ysd.repository.TeachersRepository;
 import com.ysd.service.PunchCardService;
@@ -38,6 +40,8 @@ public class PunchCardServiceImpl implements PunchCardService {
 	@Autowired
 	private ConsumelogsRepoditory consumelogsRepoditory; 
 	
+	@Autowired
+	private StatisticsRepoditory statisticsRepoditory;
 	Json json=new Json();
 	
 	@Override
@@ -99,8 +103,30 @@ public class PunchCardServiceImpl implements PunchCardService {
 		if(consumelogs<0) {
 			throw new SellException(ResultEnum.CONSUMELOGS_SAVE_ERROR);//打卡失败
 		}
-		
+		saveReadrooms(rid,readrooms);
 		return json.getJson(ResultEnum.SUCCESS.getCode().toString(), "成功打卡", consumelogs);
+	}
+	
+	public Integer saveReadrooms(Integer rid,Readrooms readrooms) {
+		Statistics statistics = getStatistics(readrooms);
+		Statistics statistics2 = statisticsRepoditory.findStatistics(statistics);
+		if(statistics2==null) {
+			Map<String, Object> map = statisticsRepoditory.finxMaxStatistics(rid);
+			statistics.setPropleNums(Integer.valueOf(map.get("prople_nums").toString())+1);
+			Statistics save = statisticsRepoditory.save(statistics);
+			return save !=null ? 1 : 0;
+		}else {
+			return statisticsRepoditory.setStatisticsAdd(statistics2.getId());
+		}
+	}
+	
+	public Statistics getStatistics(Readrooms readrooms) {
+		Statistics statistics=new Statistics();
+		statistics.setReadrooms(readrooms);
+		statistics.setYear(InitDateTime.getYear());
+		statistics.setMouth(InitDateTime.getMounth());
+		statistics.setDay(InitDateTime.getDay());
+		return statistics;
 	}
 	
 	private Consumelogs getConsumelogs(Integer rid,String cardNo) {
